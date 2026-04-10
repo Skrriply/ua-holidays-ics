@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from bs4 import BeautifulSoup
 
@@ -8,7 +8,13 @@ from app.schemas import Holiday
 
 
 class HolidaysParser(BaseParser):
-    """Парсер для структури сайту zakon.rada.gov.ua"""
+    """Parser for the holiday calendar from
+    the website of the Verkhovna Rada of Ukraine.
+
+    Attributes:
+        URL: The target endpoint for the holiday calendar.
+        HEADERS: HTTP headers for the request.
+    """
 
     URL: str = "https://zakon.rada.gov.ua/laws/main/days/sps"
     HEADERS: dict[str, str] = {
@@ -17,8 +23,13 @@ class HolidaysParser(BaseParser):
 
     @staticmethod
     def _clean_holiday_name(raw_title: str) -> str:
-        """
-        Очищує назву свята від HTML-сміття та графічних маркерів (кружечків).
+        """Removes decorative HTML elements (colored circles).
+
+        Args:
+            raw_title: The HTML containing the holiday name.
+
+        Returns:
+            A cleaned string containing only the holiday title.
         """
         inner_soup = BeautifulSoup(raw_title, "lxml")
 
@@ -28,6 +39,14 @@ class HolidaysParser(BaseParser):
         return inner_soup.get_text(separator=" ").strip()
 
     def parse(self) -> list[Holiday]:
+        """Fetches and parses the holiday calendar page.
+
+        Returns:
+            A list of `Holiday` objects.
+
+        Raises:
+            httpx.HTTPStatusError: If the request returned an unsuccessful status code.
+        """
         html = self._fetch_html(self.URL, headers=self.HEADERS, timeout=30)
         soup = BeautifulSoup(html, "lxml")
 
@@ -43,11 +62,12 @@ class HolidaysParser(BaseParser):
                 continue
 
             clean_name = self._clean_holiday_name(str(title_raw))
-            date = datetime.strptime(str(date_raw), "%Y%m%d")
+            start_date = datetime.strptime(str(date_raw), "%Y%m%d")
+            end_date = start_date + timedelta(days=1)
 
             if not clean_name:
                 continue
 
-            holidays.append(Holiday(clean_name, date))
+            holidays.append(Holiday(clean_name, start_date, end_date))
 
         return holidays

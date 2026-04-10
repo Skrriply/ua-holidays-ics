@@ -3,7 +3,7 @@ name = "ua-holidays-ics"
 version = "0.1.0"
 description = "A script to scrape official Ukrainian holidays and generate an .ics calendar file."
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 license = "GPL-3.0-only"
 authors = [{ name = "Skrriply" }]
 dependencies = []

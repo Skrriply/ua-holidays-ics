@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 
 
 class CalendarService:
+    """Class for generating iCalendar (`.ics`) files."""
+
     @staticmethod
     def generate(
         output_path: Path,
@@ -22,6 +24,20 @@ class CalendarService:
         source: str | None = None,
         refresh_interval: timedelta | None = None,
     ):
+        """Generates an iCalendar file and saves it to the specified path.
+
+        Args:
+            output_path: The file path where the `.ics` file will be saved.
+            holidays: A list of `Holiday` objects to be converted.
+            name: The display name of the calendar.
+            description: A brief summary of the calendar.
+            language: The language code (e.g., 'EN') for the calendar content.
+            source: A URL pointing to the source of the calendar data.
+            refresh_interval: How often the calendar client should check for updates.
+
+        Raises:
+            OSError: If there is an issue writing the file.
+        """
         cal = Calendar.new(
             name=name,
             description=description,

@@ -6,7 +6,12 @@ readme = "README.md"
 requires-python = ">=3.13"
 license = "GPL-3.0-only"
 authors = [{ name = "Skrriply" }]
-dependencies = []
+dependencies = [
+    "bs4>=0.0.2",
+    "httpx>=0.28.1",
+    "icalendar>=7.0.3",
+    "lxml>=6.0.3",
+]
 
 [project.urls]
 Homepage = "https://github.com/Skrriply/ua-holidays-ics"

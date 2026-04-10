@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from bs4 import BeautifulSoup
 
@@ -17,9 +17,6 @@ class HolidaysParser(BaseParser):
 
     @staticmethod
     def _clean_holiday_name(raw_title: str) -> str:
-        """
-        Очищує назву свята від HTML-сміття та графічних маркерів (кружечків).
-        """
         inner_soup = BeautifulSoup(raw_title, "lxml")
 
         for circle in inner_soup.find_all(class_="iday"):
@@ -43,11 +40,12 @@ class HolidaysParser(BaseParser):
                 continue
 
             clean_name = self._clean_holiday_name(str(title_raw))
-            date = datetime.strptime(str(date_raw), "%Y%m%d")
+            start_date = datetime.strptime(str(date_raw), "%Y%m%d")
+            end_date = start_date + timedelta(days=1)
 
             if not clean_name:
                 continue
 
-            holidays.append(Holiday(clean_name, date))
+            holidays.append(Holiday(clean_name, start_date, end_date))
 
         return holidays

@@ -34,8 +34,8 @@ class CalendarService:
         for holiday in holidays:
             event = Event.new(
                 summary=holiday.name,
-                start=holiday.date,
-                end=holiday.date,
+                start=holiday.start_date,
+                end=holiday.end_date,
                 transparency=holiday.transparency,
             )
             cal.add_component(event)

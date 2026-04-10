@@ -7,5 +7,6 @@ from icalendar import TRANSP
 @dataclass(frozen=True, slots=True)
 class Holiday:
     name: str
-    date: datetime
+    start_date: datetime
+    end_date: datetime
     transparency: TRANSP | None = TRANSP.TRANSPARENT

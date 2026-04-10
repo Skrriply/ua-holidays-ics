@@ -1,5 +1,5 @@
 [project]
-name = "ua-holidays-ics"
+name = "app"
 version = "0.1.0"
 description = "A script to scrape official Ukrainian holidays and generate an .ics calendar file."
 readme = "README.md"
